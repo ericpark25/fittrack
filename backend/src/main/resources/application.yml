@@ -1,0 +1,25 @@
+# spring.application.name=fittrack
+
+spring:
+  application:
+    name: fittrack
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fittrack_db
+    username: fittrack
+    password: fittrack
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8080
+
+jwt:
+  secret: fittrack-super-secret-key-change-in-production-must-be-at-least-256-bits
+  expiration-ms: 86400000
