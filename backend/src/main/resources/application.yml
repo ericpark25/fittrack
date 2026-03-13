@@ -21,5 +21,6 @@ server:
   port: 8080
 
 jwt:
-  secret: fittrack-super-secret-key-change-in-production-must-be-at-least-256-bits
+  # change for production
+  secret: JEQsCfXbjKDw18cU/oIkNeiMS00KvFiMnbBhBhrawH3RrxUnQcuCNxLDz+mCrOaMGNYU25pZwDgt55OBJ+DODQ==
   expiration-ms: 86400000
