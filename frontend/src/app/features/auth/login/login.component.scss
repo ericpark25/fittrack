@@ -1,0 +1,174 @@
+$accent: #00e5ff;
+$bg-page: #0f0f0f;
+$bg-card: #1a1a1a;
+$bg-input: #111111;
+$border: #2e2e2e;
+$text-primary: #ffffff;
+$text-secondary: #aaaaaa;
+$text-muted: #555555;
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-page;
+  padding: 2rem;
+  gap: 1.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: $bg-card;
+  border: 1px solid $border;
+  border-radius: 16px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 0 48px rgba(0, 229, 255, 0.05);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  .brand-icon {
+    font-size: 28px;
+    color: $accent;
+  }
+
+  .brand-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -0.03em;
+  }
+}
+
+.heading {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0;
+}
+
+.error-msg {
+  width: 100%;
+}
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: $text-secondary;
+  }
+
+  // Shared input styles applied to both pInputText and p-password input
+  %input-base {
+    width: 100%;
+    background-color: $bg-input !important;
+    border: 1px solid $border !important;
+    border-radius: 8px !important;
+    color: $text-primary !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9rem !important;
+    font-family: 'Inter', sans-serif !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &::placeholder {
+      color: $text-muted !important;
+    }
+
+    &:focus {
+      border-color: $accent !important;
+      box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.12) !important;
+      outline: none;
+    }
+  }
+
+  input[pInputText] {
+    @extend %input-base;
+  }
+
+  // Force p-password's inner input to match exactly
+  ::ng-deep .p-password {
+    width: 100%;
+
+    input {
+      @extend %input-base;
+      padding-right: 3rem !important; // space for the eye icon
+    }
+
+    .p-password-toggle-mask-icon {
+      color: $text-muted;
+
+      &:hover {
+        color: $text-secondary;
+      }
+    }
+  }
+}
+
+::ng-deep .login-btn.p-button {
+  width: 100%;
+  background-color: $accent !important;
+  border-color: $accent !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  font-family: 'Inter', sans-serif !important;
+  padding: 0.8rem 1rem !important;
+  border-radius: 8px !important;
+  margin-top: 0.25rem;
+  letter-spacing: 0.01em;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: darken(#00e5ff, 8%) !important;
+    border-color: darken(#00e5ff, 8%) !important;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+  }
+}
+
+.register-link {
+  font-size: 0.85rem;
+  color: $text-secondary;
+  margin: 0;
+
+  a {
+    color: $accent;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.tagline {
+  font-size: 0.78rem;
+  color: $text-muted;
+  margin: 0;
+  letter-spacing: 0.01em;
+}

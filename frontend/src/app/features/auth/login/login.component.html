@@ -1,0 +1,62 @@
+<div class="login-page">
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="brand">
+      <span class="material-icons brand-icon">fitness_center</span>
+      <span class="brand-name">FitTrack</span>
+    </div>
+
+    <h2 class="heading">Welcome Back</h2>
+
+    <!-- Error message -->
+    @if (errorMessage) {
+      <p-message severity="error" [text]="errorMessage" styleClass="error-msg" />
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+
+      <!-- Username -->
+      <div class="field">
+        <label for="username">Username</label>
+        <input
+          pInputText
+          id="username"
+          formControlName="username"
+          placeholder="Enter your username"
+          autocomplete="username"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          placeholder="Enter your password"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <!-- Submit -->
+      <p-button
+        type="submit"
+        label="Login"
+        styleClass="login-btn"
+        [loading]="loading"
+        [disabled]="form.invalid"
+      />
+    </form>
+
+    <p class="register-link">
+      Don't have an account? <a routerLink="/register">Register</a>
+    </p>
+  </div>
+
+  <p class="tagline">Track your fitness journey with precision and style</p>
+</div>

@@ -1,0 +1,97 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 64px;
+  background-color: #111111;
+  border-bottom: 1px solid #222222;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+
+    .brand-icon {
+      font-size: 24px;
+      color: #00e5ff;
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #888888;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    i {
+      font-size: 0.95rem;
+    }
+
+    &:hover {
+      color: #ffffff;
+      background-color: #1e1e1e;
+    }
+
+    &.active {
+      color: #00e5ff;
+      background-color: rgba(0, 229, 255, 0.1);
+    }
+  }
+
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    .username {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    ::ng-deep .avatar {
+      background-color: #00e5ff;
+      color: #000000;
+      font-weight: 700;
+      width: 2rem;
+      height: 2rem;
+      font-size: 0.85rem;
+    }
+  }
+}

@@ -1,0 +1,38 @@
+<nav class="navbar">
+  <div class="navbar-left">
+    <!-- Logo -->
+    <a routerLink="/workouts" class="navbar-brand">
+      <span class="material-icons brand-icon">fitness_center</span>
+      <span class="brand-name">FitTrack</span>
+    </a>
+
+    <!-- Nav links -->
+    <div class="navbar-links">
+      <a routerLink="/workouts" routerLinkActive="active" class="nav-link">
+        <i class="pi pi-home"></i>
+        <span>My Workouts</span>
+      </a>
+      <a routerLink="/exercises" routerLinkActive="active" class="nav-link">
+        <i class="pi pi-chart-bar"></i>
+        <span>Exercises</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="navbar-right">
+    <!-- User avatar and username -->
+    <div class="user-info">
+      <p-avatar [label]="avatarLabel" shape="circle" styleClass="avatar" />
+      <span class="username">{{ authService.currentUsername() }}</span>
+    </div>
+
+    <!-- Logout button -->
+    <p-button
+      label="Logout"
+      icon="pi pi-sign-out"
+      severity="secondary"
+      [text]="true"
+      (onClick)="logout()"
+    />
+  </div>
+</nav>
