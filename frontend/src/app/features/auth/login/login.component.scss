@@ -1,10 +1,10 @@
-$accent: #00e5ff;
+$accent: #00B4D8;
 $bg-page: #0f0f0f;
 $bg-card: #1a1a1a;
 $bg-input: #111111;
 $border: #2e2e2e;
 $text-primary: #ffffff;
-$text-secondary: #aaaaaa;
+$text-secondary: #cccccc;
 $text-muted: #555555;
 
 .login-page {
@@ -30,7 +30,7 @@ $text-muted: #555555;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-  box-shadow: 0 0 48px rgba(0, 229, 255, 0.05);
+  box-shadow: 0 0 48px rgba(0, 180, 216, 0.05);
 }
 
 .brand {
@@ -98,7 +98,7 @@ $text-muted: #555555;
 
     &:focus {
       border-color: $accent !important;
-      box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.12) !important;
+      box-shadow: 0 0 0 2px rgba(0, 180, 216, 0.12) !important;
       outline: none;
     }
   }
@@ -141,8 +141,8 @@ $text-muted: #555555;
   transition: background-color 0.2s ease, opacity 0.2s ease;
 
   &:hover:not(:disabled) {
-    background-color: darken(#00e5ff, 8%) !important;
-    border-color: darken(#00e5ff, 8%) !important;
+    background-color: #0096B7 !important;
+    border-color: #0096B7 !important;
   }
 
   &:disabled {

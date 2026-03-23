@@ -24,7 +24,7 @@
 
     .brand-icon {
       font-size: 24px;
-      color: #00e5ff;
+      color: #00B4D8;
     }
 
     .brand-name {
@@ -63,8 +63,9 @@
     }
 
     &.active {
-      color: #00e5ff;
-      background-color: rgba(0, 229, 255, 0.1);
+      color: #000000;
+      background-color: #00B4D8;
+      font-weight: 600;
     }
   }
 
@@ -86,7 +87,7 @@
     }
 
     ::ng-deep .avatar {
-      background-color: #00e5ff;
+      background-color: #00B4D8;
       color: #000000;
       font-weight: 700;
       width: 2rem;

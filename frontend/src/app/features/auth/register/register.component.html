@@ -1,1 +1,110 @@
-<p>register works!</p>
+<div class="register-page">
+  <div class="register-card">
+
+    <!-- Logo -->
+    <div class="brand">
+      <span class="material-icons brand-icon">fitness_center</span>
+      <span class="brand-name">FitTrack</span>
+    </div>
+
+    <h2 class="heading">Create Account</h2>
+
+    <!-- Error message -->
+    @if (errorMessage) {
+      <p-message severity="error" [text]="errorMessage" styleClass="error-msg" />
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
+
+      <!-- Username -->
+      <div class="field">
+        <label for="username">Username</label>
+        <input
+          pInputText
+          id="username"
+          formControlName="username"
+          placeholder="Choose a username"
+          autocomplete="username"
+        />
+        @if (username?.invalid && username?.touched) {
+          <span class="field-error">
+            @if (username?.errors?.['required']) { Username is required. }
+            @else if (username?.errors?.['minlength']) { Must be at least 3 characters. }
+          </span>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          formControlName="email"
+          placeholder="your@email.com"
+          autocomplete="email"
+          type="email"
+        />
+        @if (email?.invalid && email?.touched) {
+          <span class="field-error">
+            @if (email?.errors?.['required']) { Email is required. }
+            @else if (email?.errors?.['email']) { Enter a valid email address. }
+          </span>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          placeholder="Create a password"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          autocomplete="new-password"
+        />
+        @if (password?.invalid && password?.touched) {
+          <span class="field-error">
+            @if (password?.errors?.['required']) { Password is required. }
+            @else if (password?.errors?.['minlength']) { Must be at least 6 characters. }
+          </span>
+        }
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="field">
+        <label for="confirmPassword">Confirm Password</label>
+        <p-password
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          placeholder="Repeat your password"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          autocomplete="new-password"
+        />
+        @if (confirmPassword?.touched && form.errors?.['passwordMismatch']) {
+          <span class="field-error">Passwords do not match.</span>
+        }
+      </div>
+
+      <!-- Submit -->
+      <p-button
+        type="submit"
+        label="Create Account"
+        styleClass="register-btn"
+        [loading]="loading"
+        [disabled]="form.invalid"
+      />
+    </form>
+
+    <p class="login-link">
+      Already have an account? <a routerLink="/login">Login</a>
+    </p>
+  </div>
+
+  <p class="tagline">Track your fitness journey with precision and style</p>
+</div>

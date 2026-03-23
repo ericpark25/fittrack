@@ -1,6 +1,16 @@
 /* PrimeIcons */
 @import "primeicons/primeicons.css";
 
+/* Global brand color — used consistently across all components */
+:root {
+  --ft-primary: #00B4D8;
+  --ft-primary-dark: #0096B7;
+  --ft-bg: #0a0a0a;
+  --ft-surface: #111111;
+  --ft-border: #222222;
+  --ft-text-muted: #888888;
+}
+
 /* Global resets */
 * {
   box-sizing: border-box;
