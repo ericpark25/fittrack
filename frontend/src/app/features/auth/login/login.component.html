@@ -10,8 +10,8 @@
     <h2 class="heading">Welcome Back</h2>
 
     <!-- Error message -->
-    @if (errorMessage) {
-      <p-message severity="error" [text]="errorMessage" styleClass="error-msg" />
+    @if (errorMessage()) {
+      <p-message severity="error" [text]="errorMessage()" styleClass="error-msg" />
     }
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
@@ -48,7 +48,7 @@
         type="submit"
         label="Login"
         styleClass="login-btn"
-        [loading]="loading"
+        [loading]="loading()"
         [disabled]="form.invalid"
       />
     </form>

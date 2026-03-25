@@ -10,8 +10,8 @@
     <h2 class="heading">Create Account</h2>
 
     <!-- Error message -->
-    @if (errorMessage) {
-      <p-message severity="error" [text]="errorMessage" styleClass="error-msg" />
+    @if (errorMessage()) {
+      <p-message severity="error" [text]="errorMessage()" styleClass="error-msg" />
     }
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
@@ -96,7 +96,7 @@
         type="submit"
         label="Create Account"
         styleClass="register-btn"
-        [loading]="loading"
+        [loading]="loading()"
         [disabled]="form.invalid"
       />
     </form>

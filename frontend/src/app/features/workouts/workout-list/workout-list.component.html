@@ -1,1 +1,184 @@
-<p>workout-list works!</p>
+<div class="workout-list-page">
+
+  <!-- ── Page header ──────────────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>My Workouts</h1>
+      <p class="subtitle">Track and manage your training sessions</p>
+    </div>
+    <button class="btn-primary" (click)="openCreateModal()">
+      <span class="material-icons">add</span>
+      Start New Workout
+    </button>
+  </div>
+
+  <!-- ── Loading state ────────────────────────────────────────────────── -->
+  @if (loading()) {
+    <div class="state-container">
+      <p class="muted">Loading workouts...</p>
+    </div>
+  }
+
+  <!-- ── Empty state ──────────────────────────────────────────────────── -->
+  @else if (workouts().length === 0) {
+    <div class="state-container">
+      <div class="empty-icon">
+        <span class="material-icons">fitness_center</span>
+      </div>
+      <h2>No Workouts Yet</h2>
+      <p class="muted">Start your fitness journey by creating your first workout</p>
+      <button class="btn-primary" (click)="openCreateModal()">
+        <span class="material-icons">add</span>
+        Create First Workout
+      </button>
+    </div>
+  }
+
+  <!-- ── Workout card grid ─────────────────────────────────────────────── -->
+  @else {
+    <div class="workout-grid">
+      @for (workout of workouts(); track workout.id) {
+        <div
+          class="workout-card"
+          [class.in-progress]="workout.status === 'IN_PROGRESS'"
+          [class.completed]="workout.status === 'COMPLETED'"
+          (click)="openWorkout(workout.id)"
+        >
+          <!-- Card header: name + action buttons -->
+          <div class="card-header">
+            <h3 class="workout-name">{{ workout.name }}</h3>
+
+            <!-- stopPropagation on the wrapper so hovering/clicking the icon
+                 area doesn't accidentally trigger card navigation -->
+            <div class="card-actions" (click)="$event.stopPropagation()">
+              <button class="action-btn" (click)="openEditModal(workout, $event)" title="Edit workout">
+                <span class="material-icons">edit</span>
+              </button>
+              <button class="action-btn delete" (click)="deleteWorkout(workout.id, $event)" title="Delete workout">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </div>
+
+          <p class="workout-date">{{ workout.date | date: 'MMM d, yyyy' }}</p>
+
+          @if (workout.description) {
+            <p class="workout-description">{{ workout.description }}</p>
+          }
+
+          <div class="card-footer">
+            <span
+              class="status-badge"
+              [class.badge-progress]="workout.status === 'IN_PROGRESS'"
+              [class.badge-complete]="workout.status === 'COMPLETED'"
+            >
+              {{ workout.status === 'IN_PROGRESS' ? 'IN PROGRESS' : 'COMPLETED' }}
+            </span>
+            <span class="set-count">{{ workout.sets.length }} sets</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── Create / Edit Dialog ─────────────────────────────────────────── -->
+  <!--
+    [visible]       — driven by our signal; the dialog shows/hides reactively.
+    (visibleChange) — called when PrimeNG wants to change visibility (e.g. X button).
+                      We write the new boolean back into our signal to stay in sync.
+    appendTo="body" — renders the overlay at the <body> level so z-index / clipping
+                      issues from ancestor elements don't hide it.
+  -->
+  <p-dialog
+    [header]="isEdit ? 'Edit Workout' : 'New Workout'"
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '480px' }"
+    appendTo="body"
+  >
+
+    <form [formGroup]="workoutForm" class="dialog-form">
+
+      <!-- Workout Name -->
+      <div class="dialog-field">
+        <label for="workout-name">Workout Name</label>
+        <input
+          pInputText
+          id="workout-name"
+          formControlName="name"
+          placeholder="e.g. Morning Push Day"
+        />
+        @if (workoutForm.get('name')?.invalid && workoutForm.get('name')?.touched) {
+          <span class="field-error">Workout name is required.</span>
+        }
+      </div>
+
+      <!-- Notes / Description (optional) -->
+      <div class="dialog-field">
+        <label for="workout-desc">Notes <span class="optional">(optional)</span></label>
+        <textarea
+          id="workout-desc"
+          formControlName="description"
+          placeholder="Anything to remember about this session..."
+          rows="3"
+          class="desc-textarea"
+        ></textarea>
+      </div>
+
+      <!-- Date picker -->
+      <div class="dialog-field">
+        <label for="workout-date">Date</label>
+        <!--
+          appendTo="body" on the datepicker ensures the calendar panel
+          renders at the top of the DOM and doesn't get clipped by the dialog.
+        -->
+        <p-datepicker
+          inputId="workout-date"
+          formControlName="date"
+          dateFormat="M d, yy"
+          [showIcon]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          appendTo="body"
+        />
+      </div>
+
+      <!-- Status dropdown — only shown when editing an existing workout.
+           On create, status is always set to IN_PROGRESS programmatically. -->
+      @if (isEdit) {
+        <div class="dialog-field">
+          <label for="workout-status">Status</label>
+          <p-select
+            inputId="workout-status"
+            formControlName="status"
+            [options]="statusOptions"
+            optionLabel="label"
+            optionValue="value"
+            styleClass="w-full"
+            appendTo="body"
+          />
+        </div>
+      }
+
+    </form>
+
+    <!-- Dialog footer with Cancel and Save buttons -->
+    <ng-template pTemplate="footer">
+      <div class="dialog-footer">
+        <button class="btn-secondary" (click)="closeDialog()">Cancel</button>
+        <button
+          class="btn-primary"
+          (click)="saveWorkout()"
+          [disabled]="workoutForm.invalid || saving()"
+        >
+          {{ saving() ? 'Saving...' : (isEdit ? 'Save Changes' : 'Create Workout') }}
+        </button>
+      </div>
+    </ng-template>
+
+  </p-dialog>
+
+</div>

@@ -15,6 +15,7 @@ public class WorkoutResponse {
 
     private Long id;
     private String name;
+    private String description;
     private LocalDate date;
     private WorkoutStatus status;
     private List<WorkoutSetResponse> sets; // all sets logged in this workout, grouped by exercise on the frontend

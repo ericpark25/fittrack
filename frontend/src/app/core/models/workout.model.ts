@@ -25,6 +25,7 @@ export interface WorkoutSetRequest {
 export interface Workout {
   id: number;
   name: string;
+  description?: string;
   date: string;
   status: WorkoutStatus;
   sets: WorkoutSet[];
@@ -32,6 +33,7 @@ export interface Workout {
 
 export interface WorkoutRequest {
   name: string;
+  description?: string;
   date: string;
   status: WorkoutStatus;
 }

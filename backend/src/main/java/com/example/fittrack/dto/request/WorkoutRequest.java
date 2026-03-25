@@ -13,6 +13,9 @@ public class WorkoutRequest {
     @NotBlank(message = "Workout name is required")
     private String name;
 
+    // Optional — user can leave blank
+    private String description;
+
     @NotNull(message = "Date is required")
     private LocalDate date;
 

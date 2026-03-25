@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -32,20 +32,20 @@ export class LoginComponent {
     password: ['', [Validators.required]]
   });
 
-  loading = false;
-  errorMessage = '';
+  loading = signal(false);
+  errorMessage = signal('');
 
   onSubmit() {
     if (this.form.invalid) return;
 
-    this.loading = true;
-    this.errorMessage = '';
+    this.loading.set(true);
+    this.errorMessage.set('');
 
     this.authService.login(this.form.value).subscribe({
       next: () => this.router.navigate(['/workouts']),
       error: () => {
-        this.errorMessage = 'Invalid username or password.';
-        this.loading = false;
+        this.errorMessage.set('Invalid username or password.');
+        this.loading.set(false);
       }
     });
   }

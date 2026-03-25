@@ -47,6 +47,7 @@ public class WorkoutService {
         User user = getCurrentUser();
         Workout workout = Workout.builder()
                 .name(request.getName())
+                .description(request.getDescription())
                 .date(request.getDate())
                 .status(request.getStatus())
                 .user(user)
@@ -61,6 +62,7 @@ public class WorkoutService {
                 .orElseThrow(() -> new RuntimeException("Workout not found"));
 
         workout.setName(request.getName());
+        workout.setDescription(request.getDescription());
         workout.setDate(request.getDate());
         workout.setStatus(request.getStatus());
 
@@ -155,6 +157,7 @@ public class WorkoutService {
         return WorkoutResponse.builder()
                 .id(workout.getId())
                 .name(workout.getName())
+                .description(workout.getDescription())
                 .date(workout.getDate())
                 .status(workout.getStatus())
                 .sets(sets)

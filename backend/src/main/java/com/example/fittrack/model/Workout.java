@@ -23,6 +23,10 @@ public class Workout {
     @Column(nullable = false)
     private String name;
 
+    // Optional notes about the workout session (e.g. "Deload week", "Felt strong today")
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WorkoutStatus status;
