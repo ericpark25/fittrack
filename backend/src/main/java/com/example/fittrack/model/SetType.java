@@ -1,7 +1,7 @@
 package com.example.fittrack.model;
 
 public enum SetType {
-    NORMAL,
+    WORKING,
     WARMUP,
-    DROP_SET
+    DROP
 }

@@ -1,0 +1,254 @@
+// ── Layout ──────────────────────────────────────────────────────────────────
+
+.exercise-library {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+// ── Page Header ─────────────────────────────────────────────────────────────
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ft-text-primary);
+  margin: 0 0 0.25rem;
+}
+
+.page-subtitle {
+  font-size: 0.9rem;
+  color: var(--ft-text-muted);
+  margin: 0;
+}
+
+// ── Buttons ─────────────────────────────────────────────────────────────────
+
+.btn-add-exercise {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--ft-primary);
+  color: #000;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, opacity 0.15s;
+
+  .material-icons {
+    font-size: 1.1rem;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--ft-primary-hover);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+// ── Sections ─────────────────────────────────────────────────────────────────
+
+.exercise-section {
+  margin-bottom: 3rem;
+}
+
+.section-header {
+  margin-bottom: 1.25rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--ft-text-primary);
+  margin: 0;
+}
+
+.section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ft-text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+}
+
+.section-lock {
+  font-size: 1rem;
+  color: var(--ft-text-muted);
+  opacity: 0.6;
+}
+
+// ── Exercise Grid ────────────────────────────────────────────────────────────
+
+.exercise-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 800px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Exercise Card ─────────────────────────────────────────────────────────────
+
+.exercise-card {
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: rgba(0, 180, 216, 0.35);
+  }
+
+  &--custom {
+    border-left: 3px solid var(--ft-primary);
+  }
+}
+
+.exercise-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.exercise-card__name {
+  font-weight: 600;
+  font-size: 0.975rem;
+  color: var(--ft-text-primary);
+}
+
+.exercise-card__lock {
+  font-size: 0.9rem;
+  color: var(--ft-text-muted);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.exercise-card__description {
+  font-size: 0.825rem;
+  color: var(--ft-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+// ── Muscle Group Badges ───────────────────────────────────────────────────────
+
+.muscle-badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  width: fit-content;
+
+  &.muscle-chest      { background: rgba(6, 182, 212, 0.15);   color: #06b6d4; }
+  &.muscle-back       { background: rgba(34, 197, 94, 0.15);   color: #22c55e; }
+  &.muscle-shoulders  { background: rgba(168, 85, 247, 0.15);  color: #a855f7; }
+  &.muscle-arms       { background: rgba(249, 115, 22, 0.15);  color: #f97316; }
+  &.muscle-legs       { background: rgba(234, 179, 8, 0.15);   color: #eab308; }
+  &.muscle-core       { background: rgba(245, 158, 11, 0.15);  color: #f59e0b; }
+  &.muscle-full-body  { background: rgba(20, 184, 166, 0.15);  color: #14b8a6; }
+}
+
+// ── Empty State ───────────────────────────────────────────────────────────────
+
+.empty-state {
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.empty-state__icon {
+  font-size: 2.5rem;
+  color: var(--ft-primary);
+  opacity: 0.6;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ft-text-primary);
+  margin: 0;
+}
+
+.empty-state__subtitle {
+  font-size: 0.85rem;
+  color: var(--ft-text-muted);
+  margin: 0 0 1rem;
+}
+
+// ── Loading / Error States ────────────────────────────────────────────────────
+
+.state-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  color: var(--ft-text-muted);
+
+  .material-icons {
+    font-size: 2rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  &--error {
+    color: #f87171;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}

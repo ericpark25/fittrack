@@ -1,1 +1,408 @@
-<p>workout-detail works!</p>
+<div class="detail-page">
+
+  <!-- ── Loading state ─────────────────────────────────────────────────── -->
+  @if (loading()) {
+    <div class="state-container">
+      <div class="spinner"></div>
+      <p class="muted">Loading workout...</p>
+    </div>
+  }
+
+  <!-- ── Error state ────────────────────────────────────────────────────── -->
+  @else if (error()) {
+    <div class="state-container">
+      <span class="material-icons error-icon" aria-hidden="true">error_outline</span>
+      <h2>Workout not found</h2>
+      <p class="muted">This workout may have been deleted or doesn't exist.</p>
+      <button class="btn-secondary" (click)="goBack()">← Back to Workouts</button>
+    </div>
+  }
+
+  <!-- ── Workout loaded ─────────────────────────────────────────────────── -->
+  @else if (workout(); as w) {
+
+    <!-- Page header -->
+    <header class="detail-header">
+
+      <!-- Left: back arrow + name / date / badge / description -->
+      <div class="header-left">
+        <button
+          class="back-btn"
+          (click)="goBack()"
+          aria-label="Back to workouts"
+          title="Back to workouts"
+        >
+          <span class="material-icons" aria-hidden="true">arrow_back</span>
+        </button>
+
+        <div class="workout-meta">
+          <h1 class="workout-name">{{ w.name }}</h1>
+
+          <div class="workout-sub">
+            <span class="workout-date">{{ formatDate(w.date) }}</span>
+            <span
+              class="status-badge"
+              [class.badge-progress]="w.status === 'IN_PROGRESS'"
+              [class.badge-complete]="w.status === 'COMPLETED'"
+              [attr.aria-label]="w.status === 'IN_PROGRESS' ? 'Status: In Progress' : 'Status: Completed'"
+            >
+              {{ w.status === 'IN_PROGRESS' ? 'IN PROGRESS' : 'COMPLETED' }}
+            </span>
+          </div>
+
+          @if (w.description) {
+            <p class="workout-description">{{ w.description }}</p>
+          }
+        </div>
+      </div>
+
+      <!-- Right: Complete / Reopen toggle -->
+      <button
+        class="btn-toggle"
+        [class.btn-complete]="w.status === 'IN_PROGRESS'"
+        [class.btn-reopen]="w.status === 'COMPLETED'"
+        [disabled]="toggling()"
+        (click)="toggleStatus()"
+        [attr.aria-label]="w.status === 'IN_PROGRESS' ? 'Mark workout as complete' : 'Reopen workout'"
+      >
+        <span class="material-icons" aria-hidden="true">
+          {{ toggling() ? 'hourglass_empty' : (w.status === 'IN_PROGRESS' ? 'check_circle' : 'replay') }}
+        </span>
+        {{ toggling() ? 'Saving...' : (w.status === 'IN_PROGRESS' ? 'Complete Workout' : 'Reopen Workout') }}
+      </button>
+
+    </header>
+
+    <!-- ── Content area ────────────────────────────────────────────────── -->
+    <div class="detail-content">
+
+      <!-- Exercise picker — only visible for IN_PROGRESS workouts.
+           Completed workouts are read-only; no new exercises can be added. -->
+      @if (w.status === 'IN_PROGRESS') {
+        <section class="picker-section" aria-label="Add exercise to workout">
+          <h2 class="section-title">Add Exercise</h2>
+
+          <!-- Row 1: exercise dropdown (full width) -->
+          <div class="picker-exercise-row">
+            <p-select
+              class="exercise-select"
+              [options]="exerciseOptions()"
+              [group]="true"
+              optionGroupLabel="label"
+              optionGroupChildren="items"
+              optionLabel="name"
+              optionValue="id"
+              [ngModel]="selectedExerciseId()"
+              (ngModelChange)="selectedExerciseId.set($event)"
+              placeholder="Select an exercise"
+              [filter]="true"
+              filterPlaceholder="Search exercises..."
+              aria-label="Select an exercise to add"
+            />
+          </div>
+
+          <!-- Row 2: weight / reps / RPE / submit
+               align-items: flex-end keeps the button flush with the inputs,
+               sitting below the labels rather than centred against them -->
+          <div class="picker-set-row">
+
+            <div class="picker-field">
+              <label class="picker-label" for="picker-weight">Weight</label>
+              <div class="picker-input-group">
+                <input
+                  id="picker-weight"
+                  class="picker-input"
+                  type="number"
+                  min="0"
+                  step="0.5"
+                  placeholder="0"
+                  [ngModel]="pickerWeight()"
+                  (ngModelChange)="pickerWeight.set($event)"
+                />
+                <span class="input-unit">lbs</span>
+              </div>
+            </div>
+
+            <div class="picker-field">
+              <label class="picker-label" for="picker-reps">Reps</label>
+              <input
+                id="picker-reps"
+                class="picker-input reps-input"
+                type="number"
+                min="1"
+                placeholder="0"
+                [ngModel]="pickerReps()"
+                (ngModelChange)="pickerReps.set($event)"
+              />
+            </div>
+
+            <!-- RPE is optional — the '—' option sends null -->
+            <div class="picker-field">
+              <label class="picker-label">
+                RPE
+                <span class="label-optional">(optional)</span>
+              </label>
+              <p-select
+                class="rpe-select"
+                [options]="rpeOptions"
+                optionLabel="label"
+                optionValue="value"
+                [ngModel]="pickerRpe()"
+                (ngModelChange)="pickerRpe.set($event)"
+                placeholder="—"
+                aria-label="RPE for first set, optional"
+              />
+            </div>
+
+            <div class="picker-field">
+              <label class="picker-label">Type</label>
+              <p-select
+                class="set-type-select"
+                [options]="setTypeOptions"
+                optionLabel="label"
+                optionValue="value"
+                [ngModel]="pickerSetType()"
+                (ngModelChange)="pickerSetType.set($event)"
+                aria-label="Set type for first set"
+              />
+            </div>
+
+            <button
+              class="btn-add"
+              [disabled]="!selectedExerciseId() || pickerWeight() === null || !pickerReps() || addingExercise()"
+              (click)="addExerciseBlock()"
+              aria-label="Log first set and add exercise block"
+            >
+              <span class="material-icons" aria-hidden="true">{{ addingExercise() ? 'hourglass_empty' : 'add' }}</span>
+              {{ addingExercise() ? 'Adding...' : 'Add' }}
+            </button>
+
+          </div>
+        </section>
+      }
+
+      <!-- Empty state — shown when no exercise blocks exist yet -->
+      @if (exerciseBlocks().length === 0) {
+        <div class="empty-exercises">
+          <span class="material-icons empty-icon" aria-hidden="true">fitness_center</span>
+          <p class="empty-title">No Exercises Yet</p>
+          <p class="muted">
+            @if (w.status === 'IN_PROGRESS') {
+              Select an exercise above to get started
+            } @else {
+              No exercises were logged for this workout
+            }
+          </p>
+        </div>
+      }
+
+      <!-- Exercise blocks — one card per consecutive exercise group.
+           $index is used as the track key because the same exercise can appear
+           more than once (interleaved training), so exerciseId is not unique. -->
+      @for (block of exerciseBlocks(); track $index) {
+        <div
+          class="exercise-block"
+          [class.is-completed]="w.status === 'COMPLETED'"
+          [attr.aria-label]="block.exerciseName + ' exercise block'"
+        >
+
+          <!-- Block header — clicking anywhere on it toggles collapse -->
+          <div
+            class="block-header"
+            role="button"
+            tabindex="0"
+            [attr.aria-expanded]="!block.collapsed"
+            [attr.aria-controls]="'block-body-' + block.blockIndex"
+            (click)="toggleBlock(block.blockIndex)"
+            (keydown.enter)="toggleBlock(block.blockIndex)"
+            (keydown.space)="$event.preventDefault(); toggleBlock(block.blockIndex)"
+          >
+            <h3 class="block-title">{{ block.exerciseName }}</h3>
+            <div class="block-header-right">
+              <span class="block-set-count">
+                {{ block.sets.length }} {{ block.sets.length === 1 ? 'set' : 'sets' }}
+              </span>
+              <span
+                class="material-icons collapse-arrow"
+                [class.is-collapsed]="block.collapsed"
+                aria-hidden="true"
+              >expand_more</span>
+            </div>
+          </div>
+
+          <!-- Collapsible body — animates via CSS grid-template-rows trick.
+               grid-template-rows: 1fr (expanded) → 0fr (collapsed) transitions
+               smoothly without needing to know the exact content height. -->
+          <div
+            class="block-body"
+            [class.is-collapsed]="block.collapsed"
+            [id]="'block-body-' + block.blockIndex"
+            [attr.aria-hidden]="block.collapsed"
+          >
+            <div class="block-body-inner">
+
+          <!-- ── Set table ────────────────────────────────────────────── -->
+          <table class="set-table" [attr.aria-label]="block.exerciseName + ' logged sets'">
+            <thead>
+              <tr>
+                <th scope="col" class="col-num">Set</th>
+                <th scope="col" class="col-type">Type</th>
+                <th scope="col" class="col-weight">Weight</th>
+                <th scope="col" class="col-reps">Reps</th>
+                <th scope="col" class="col-rpe">RPE</th>
+                <th scope="col" class="col-e1rm">Est. 1RM</th>
+                <!-- Only render the actions column header when editing is allowed -->
+                @if (w.status === 'IN_PROGRESS') {
+                  <th scope="col" class="col-actions"><span class="sr-only">Actions</span></th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (set of block.sets; track set.id) {
+                <tr>
+                  <td class="col-num">{{ set.setNumber }}</td>
+                  <td class="col-type">
+                    <span class="set-type-badge" [class]="'type-' + set.setType.toLowerCase().replace('_', '-')">
+                      {{ set.setType === 'WORKING' ? 'Working' : set.setType === 'WARMUP' ? 'Warmup' : 'Drop' }}
+                    </span>
+                  </td>
+                  <td class="col-weight">{{ set.weight }} lbs</td>
+                  <td class="col-reps">{{ set.reps }}</td>
+                  <td class="col-rpe">{{ set.rpe ?? '—' }}</td>
+                  <td class="col-e1rm">
+                    @if (set.e1rm) {
+                      {{ set.e1rm | number:'1.1-1' }} lbs
+                    } @else {
+                      —
+                    }
+                  </td>
+                  @if (w.status === 'IN_PROGRESS') {
+                    <td class="col-actions">
+                      <!-- Duplicate: copies this set's weight/reps/RPE as a new set at the end of the block -->
+                      <button
+                        class="set-action-btn duplicate-set-btn"
+                        [disabled]="duplicatingSetId() === set.id || deletingSetId() !== null"
+                        (click)="duplicateSet(block, set)"
+                        [attr.aria-label]="'Duplicate set ' + set.setNumber + ' of ' + block.exerciseName"
+                        title="Duplicate set"
+                      >
+                        <span class="material-icons" aria-hidden="true">
+                          {{ duplicatingSetId() === set.id ? 'hourglass_empty' : 'content_copy' }}
+                        </span>
+                      </button>
+
+                      <!-- Delete -->
+                      <button
+                        class="set-action-btn delete-set-btn"
+                        [disabled]="deletingSetId() === set.id || duplicatingSetId() !== null"
+                        (click)="deleteSet(block, set.id)"
+                        [attr.aria-label]="'Delete set ' + set.setNumber + ' of ' + block.exerciseName"
+                        title="Delete set"
+                      >
+                        <span class="material-icons" aria-hidden="true">
+                          {{ deletingSetId() === set.id ? 'hourglass_empty' : 'delete' }}
+                        </span>
+                      </button>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+
+          <!-- ── Log Set form ─────────────────────────────────────────── -->
+          <!-- Hidden for COMPLETED workouts — the block becomes read-only -->
+          @if (w.status === 'IN_PROGRESS') {
+            <div
+              class="log-set-form"
+              role="form"
+              [attr.aria-label]="'Log a set for ' + block.exerciseName"
+            >
+              <div class="log-set-fields">
+
+                <div class="picker-field">
+                  <label class="picker-label" [for]="'log-weight-' + block.blockIndex">Weight</label>
+                  <div class="picker-input-group">
+                    <input
+                      [id]="'log-weight-' + block.blockIndex"
+                      class="picker-input"
+                      type="number"
+                      min="0"
+                      step="0.5"
+                      placeholder="0"
+                      [ngModel]="getForm(block.blockIndex).weight"
+                      (ngModelChange)="setFormField(block.blockIndex, 'weight', $event)"
+                    />
+                    <span class="input-unit">lbs</span>
+                  </div>
+                </div>
+
+                <div class="picker-field">
+                  <label class="picker-label" [for]="'log-reps-' + block.blockIndex">Reps</label>
+                  <input
+                    [id]="'log-reps-' + block.blockIndex"
+                    class="picker-input reps-input"
+                    type="number"
+                    min="1"
+                    placeholder="0"
+                    [ngModel]="getForm(block.blockIndex).reps"
+                    (ngModelChange)="setFormField(block.blockIndex, 'reps', $event)"
+                  />
+                </div>
+
+                <div class="picker-field">
+                  <label class="picker-label">RPE <span class="label-optional">(optional)</span></label>
+                  <p-select
+                    class="rpe-select"
+                    [options]="rpeOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    [ngModel]="getForm(block.blockIndex).rpe"
+                    (ngModelChange)="setFormField(block.blockIndex, 'rpe', $event)"
+                    placeholder="—"
+                    appendTo="body"
+                    [attr.aria-label]="'RPE for ' + block.exerciseName + ', optional'"
+                  />
+                </div>
+
+                <div class="picker-field">
+                  <label class="picker-label">Type</label>
+                  <p-select
+                    class="set-type-select"
+                    [options]="setTypeOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    [ngModel]="getForm(block.blockIndex).setType"
+                    (ngModelChange)="setFormField(block.blockIndex, 'setType', $event)"
+                    appendTo="body"
+                    [attr.aria-label]="'Set type for ' + block.exerciseName"
+                  />
+                </div>
+
+                <button
+                  class="btn-log-set"
+                  [disabled]="!getForm(block.blockIndex).weight || !getForm(block.blockIndex).reps || getForm(block.blockIndex).submitting"
+                  (click)="logSet(block)"
+                  [attr.aria-label]="'Log a set for ' + block.exerciseName"
+                >
+                  <span class="material-icons" aria-hidden="true">
+                    {{ getForm(block.blockIndex).submitting ? 'hourglass_empty' : 'add' }}
+                  </span>
+                  {{ getForm(block.blockIndex).submitting ? 'Logging...' : 'Log Set' }}
+                </button>
+
+              </div>
+            </div>
+          }
+
+            </div> <!-- /block-body-inner -->
+          </div>   <!-- /block-body -->
+
+        </div>
+      }
+
+    </div>
+
+  }
+
+</div>

@@ -2,6 +2,10 @@ package com.example.fittrack.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "workout_sets")
@@ -27,6 +31,13 @@ public class WorkoutSet {
     @Column(name = "set_number", nullable = false)
     private Integer setNumber;
 
+    // Identifies which visual exercise block this set belongs to.
+    // All sets logged under the same exercise card share the same blockIndex.
+    // This lets us reconstruct the correct grouping on reload, even if the same
+    // exercise appears more than once (interleaved training).
+    @Column(name = "block_index", nullable = false)
+    private Integer blockIndex;
+
     @Column(nullable = false)
     private Double weight;
 
@@ -41,6 +52,16 @@ public class WorkoutSet {
 
     @Column(name = "e1rm")
     private Double e1rm;
+
+    // Automatically set by Hibernate on INSERT — used to preserve insertion order when displaying sets
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    // Automatically updated by Hibernate on every UPDATE
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @PrePersist
     @PreUpdate

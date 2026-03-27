@@ -14,6 +14,7 @@ public class WorkoutSetResponse {
     private Long exerciseId;
     private String exerciseName;  // included so the frontend doesn't need a separate lookup
     private Integer setNumber;
+    private Integer blockIndex;   // which visual exercise block this set belongs to
     private Double weight;
     private Integer reps;
     private Double rpe;

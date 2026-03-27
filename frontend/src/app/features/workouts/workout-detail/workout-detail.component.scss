@@ -1,0 +1,674 @@
+.detail-page {
+  padding: 2rem 2.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+// ── Loading / error states ────────────────────────────────────────────────
+.state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 6rem 2rem;
+  text-align: center;
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .muted {
+    font-size: 0.9rem;
+    color: var(--ft-text-muted);
+  }
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #222222;
+  border-top-color: var(--ft-primary);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: #ef4444;
+}
+
+// ── Page header ───────────────────────────────────────────────────────────
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+// ── Back button ───────────────────────────────────────────────────────────
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+  background: transparent;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  color: var(--ft-text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+  .material-icons { font-size: 1.1rem; }
+
+  &:hover {
+    background-color: #1e1e1e;
+    border-color: #555555;
+    color: #ffffff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ft-primary);
+    outline-offset: 2px;
+  }
+}
+
+// ── Workout meta ──────────────────────────────────────────────────────────
+.workout-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.workout-name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.4rem;
+  overflow-wrap: break-word;
+}
+
+.workout-sub {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}
+
+.workout-date {
+  font-size: 0.9rem;
+  color: var(--ft-text-muted);
+}
+
+.workout-description {
+  font-size: 0.88rem;
+  color: #aaaaaa;
+  line-height: 1.5;
+  margin: 0.25rem 0 0;
+}
+
+// ── Status badge ──────────────────────────────────────────────────────────
+.status-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+
+  &.badge-progress {
+    background-color: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+  }
+
+  &.badge-complete {
+    background-color: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+  }
+}
+
+// ── Complete / Reopen button ──────────────────────────────────────────────
+.btn-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  border: none;
+
+  .material-icons { font-size: 1.1rem; }
+
+  // Solid cyan — the primary action
+  &.btn-complete {
+    background-color: var(--ft-primary);
+    color: #000000;
+
+    &:hover:not(:disabled) { background-color: var(--ft-primary-dark); }
+  }
+
+  // Outlined green — recovery action, intentionally less prominent
+  &.btn-reopen {
+    background-color: transparent;
+    color: #22c55e;
+    border: 1px solid #22c55e;
+
+    &:hover:not(:disabled) { background-color: rgba(34, 197, 94, 0.1); }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ft-primary);
+    outline-offset: 2px;
+  }
+}
+
+// ── Content area ──────────────────────────────────────────────────────────
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+// ── Exercise picker section ───────────────────────────────────────────────
+.picker-section {
+  background-color: #111111;
+  border: 1px solid #222222;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+// Row 1: exercise dropdown spans full width
+.picker-exercise-row {
+  display: flex;
+
+  .exercise-select {
+    flex: 1;
+  }
+}
+
+// Row 2: weight / reps / RPE / add button.
+// align-items: flex-end so the button sits flush with the inputs,
+// below the labels rather than vertically centred against them.
+.picker-set-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+// Labeled field wrapper — stacks label above input
+.picker-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.picker-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #cccccc;
+  white-space: nowrap;
+}
+
+.label-optional {
+  font-weight: 400;
+  color: var(--ft-text-muted);
+}
+
+// Shared base for picker number inputs
+.picker-input {
+  height: 38px;
+  background-color: var(--p-inputtext-background, #0f0f0f);
+  color: var(--p-inputtext-color, #ffffff);
+  border: 1px solid var(--p-inputtext-border-color, #333333);
+  border-radius: 6px;
+  padding: 0 0.65rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+
+  // Hide browser spin arrows — cleaner look for a gym logging form
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button { -webkit-appearance: none; }
+  &[type='number'] { -moz-appearance: textfield; }
+
+  &::placeholder { color: var(--ft-text-muted); }
+  &:focus { border-color: var(--ft-primary); }
+}
+
+// Weight input + "lbs" unit label side-by-side
+.picker-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  .picker-input { width: 90px; }
+}
+
+.input-unit {
+  font-size: 0.85rem;
+  color: var(--ft-text-muted);
+  white-space: nowrap;
+}
+
+// Reps is narrower — it's just a whole number
+.reps-input { width: 72px; }
+
+// RPE dropdown — compact, matches input height
+.rpe-select { width: 100px; }
+
+// Set type dropdown — wide enough to show "Working" without truncation
+.set-type-select { width: 150px; }
+
+// ── Set type badge (in the table) ─────────────────────────────────────────
+.set-type-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+
+  // Working Set — cyan to match the app's primary brand colour
+  &.type-working {
+    background-color: rgba(0, 180, 216, 0.12);
+    color: var(--ft-primary);
+  }
+
+  // Warmup — amber, signals a lower-intensity preparatory set
+  &.type-warmup {
+    background-color: rgba(251, 191, 36, 0.12);
+    color: #fbbf24;
+  }
+
+  // Drop — purple, signals an advanced intensity technique
+  &.type-drop {
+    background-color: rgba(167, 139, 250, 0.12);
+    color: #a78bfa;
+  }
+}
+
+// "+ Add" button
+.btn-add {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: auto;  // push to the right end of the row
+  flex-shrink: 0;
+  padding: 0.55rem 1.1rem;
+  background-color: var(--ft-primary);
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  .material-icons { font-size: 1rem; }
+
+  &:hover:not(:disabled) { background-color: var(--ft-primary-dark); }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ft-primary);
+    outline-offset: 2px;
+  }
+}
+
+// ── Empty exercises state ─────────────────────────────────────────────────
+.empty-exercises {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 4rem 2rem;
+  text-align: center;
+  background-color: #111111;
+  border: 1px solid #222222;
+  border-radius: 12px;
+
+  .empty-icon {
+    font-size: 2.5rem;
+    color: var(--ft-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .empty-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  .muted {
+    font-size: 0.875rem;
+    color: var(--ft-text-muted);
+    margin: 0;
+  }
+}
+
+// ── Exercise block card ───────────────────────────────────────────────────
+.exercise-block {
+  background-color: #111111;
+  border: 1px solid #222222;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  // Completed workouts get a green left accent — mirrors the green glow on the
+  // workout list card and signals "sealed / read-only" without a hard lock icon
+  &.is-completed {
+    border-color: rgba(34, 197, 94, 0.3);
+    border-left: 3px solid #22c55e;
+    // Slightly pull back the left padding to compensate for the wider border
+    // so text doesn't shift
+    padding-left: calc(1.5rem - 2px);
+  }
+}
+
+.block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  // When collapsed, header has no bottom margin — the body handles spacing
+  margin-bottom: 1rem;
+  cursor: pointer;
+  user-select: none;  // prevent text selection on rapid clicks
+  border-radius: 6px;
+  padding: 0.1rem 0.1rem;
+  transition: background-color 0.15s ease;
+
+  &:hover { background-color: rgba(255, 255, 255, 0.03); }
+
+  &:focus-visible {
+    outline: 2px solid var(--ft-primary);
+    outline-offset: 2px;
+  }
+
+  // Remove bottom margin when the body is collapsed so the card stays tight
+  &[aria-expanded='false'] {
+    margin-bottom: 0;
+  }
+}
+
+.block-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+// Right side of the header: set count + collapse arrow
+.block-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.block-set-count {
+  font-size: 0.8rem;
+  color: var(--ft-text-muted);
+}
+
+// Arrow icon — points down when expanded, right when collapsed
+.collapse-arrow {
+  font-size: 1.2rem;
+  color: var(--ft-text-muted);
+  transition: transform 0.25s ease;
+
+  &.is-collapsed {
+    transform: rotate(-90deg);
+  }
+}
+
+// ── Collapsible block body ────────────────────────────────────────────────
+// CSS grid-template-rows trick: animating from 1fr → 0fr collapses the
+// content smoothly without needing to know its exact height.
+.block-body {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.25s ease;
+
+  &.is-collapsed {
+    grid-template-rows: 0fr;
+  }
+}
+
+// The inner wrapper must have overflow: hidden to clip content during animation
+.block-body-inner {
+  overflow: hidden;
+}
+
+// ── Set table ─────────────────────────────────────────────────────────────
+.set-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.75rem;
+
+  th, td {
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+    font-size: 0.875rem;
+  }
+
+  thead tr {
+    border-bottom: 1px solid #222222;
+  }
+
+  th {
+    font-weight: 500;
+    color: var(--ft-text-muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #1a1a1a;
+    transition: background-color 0.1s ease;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background-color: rgba(255, 255, 255, 0.02); }
+  }
+
+  td { color: #ffffff; }
+}
+
+// Column sizing and specific colours
+.col-num {
+  width: 48px;
+  color: var(--ft-text-muted) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.col-type   { width: 80px; }
+.col-weight { min-width: 90px; }
+.col-reps   { width: 60px; }
+.col-rpe    { width: 60px; }
+
+// e1RM rendered in the brand cyan so it stands out as a useful insight
+.col-e1rm {
+  min-width: 110px;
+  color: var(--ft-primary) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.col-actions {
+  // Wide enough for two 28px icon buttons + gap between them
+  width: 72px;
+  text-align: right !important;
+}
+
+// Actions cell inner layout — aligns duplicate + delete side by side
+td.col-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem;
+}
+
+// Screen-reader-only helper (used on the empty Actions <th>)
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ── Set action buttons (duplicate + delete) ───────────────────────────────
+// Shared base styles — specific hover colours applied per button below
+.set-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--ft-text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+
+  .material-icons { font-size: 0.95rem; }
+
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  &:focus-visible {
+    outline: 2px solid var(--ft-primary);
+    outline-offset: 2px;
+  }
+}
+
+// Duplicate turns cyan on hover — positive/additive action
+.duplicate-set-btn:hover:not(:disabled) {
+  background-color: rgba(0, 180, 216, 0.12);
+  color: var(--ft-primary);
+}
+
+// Delete turns red on hover — destructive action
+.delete-set-btn:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+// ── Log Set form ──────────────────────────────────────────────────────────
+// Sits at the bottom of each exercise block card, separated by a faint border.
+.log-set-form {
+  border-top: 1px solid #1e1e1e;
+  padding-top: 1rem;
+}
+
+.log-set-fields {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+// "Log Set" button — outlined cyan to distinguish it from the solid "Add Exercise" button.
+// Hierarchy: solid = creates a new block, outlined = adds to an existing block.
+.btn-log-set {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  color: var(--ft-primary);
+  border: 1px solid var(--ft-primary);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  .material-icons { font-size: 0.95rem; }
+
+  &:hover:not(:disabled) { background-color: rgba(0, 180, 216, 0.08); }
+
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  &:focus-visible {
+    outline: 2px solid var(--ft-primary);
+    outline-offset: 2px;
+  }
+}
+
+// ── Secondary button (error state "Back to Workouts") ─────────────────────
+.btn-secondary {
+  background-color: transparent;
+  color: var(--ft-text-muted);
+  border: 1px solid #333333;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    border-color: #555555;
+    color: #cccccc;
+  }
+}

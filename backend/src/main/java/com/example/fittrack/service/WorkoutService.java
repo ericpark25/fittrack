@@ -28,7 +28,7 @@ public class WorkoutService {
     // Returns all workouts belonging to the current user, each with their sets
     public List<WorkoutResponse> getAllForCurrentUser() {
         User user = getCurrentUser();
-        return workoutRepository.findByUserId(user.getId())
+        return workoutRepository.findByUserIdOrderByDateDesc(user.getId())
                 .stream()
                 .map(this::toResponse)
                 .toList();
@@ -93,6 +93,7 @@ public class WorkoutService {
                 .workout(workout)
                 .exercise(exercise)
                 .setNumber(request.getSetNumber())
+                .blockIndex(request.getBlockIndex())
                 .weight(request.getWeight())
                 .reps(request.getReps())
                 .rpe(request.getRpe())
@@ -171,6 +172,7 @@ public class WorkoutService {
                 .exerciseId(set.getExercise().getId())
                 .exerciseName(set.getExercise().getName())
                 .setNumber(set.getSetNumber())
+                .blockIndex(set.getBlockIndex())
                 .weight(set.getWeight())
                 .reps(set.getReps())
                 .rpe(set.getRpe())

@@ -1,1 +1,102 @@
-<p>exercise-list works!</p>
+<div class="exercise-library">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header__text">
+      <h1 class="page-title">Exercise Library</h1>
+      <p class="page-subtitle">Browse global exercises or create your own custom exercises</p>
+    </div>
+    <button class="btn-add-exercise" disabled>
+      <span class="material-icons">add</span>
+      Add Custom Exercise
+    </button>
+  </div>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="state-center">
+      <span class="material-icons spinning">sync</span>
+      <p>Loading exercises…</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @else if (error()) {
+    <div class="state-center state-center--error">
+      <span class="material-icons">error_outline</span>
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  <!-- Loaded -->
+  @else {
+
+    <!-- My Custom Exercises -->
+    <section class="exercise-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          My Custom Exercises
+          <span class="section-count">{{ customExercises().length }}</span>
+        </h2>
+      </div>
+
+      @if (customExercises().length === 0) {
+        <div class="empty-state">
+          <span class="material-icons empty-state__icon">fitness_center</span>
+          <p class="empty-state__title">No Custom Exercises</p>
+          <p class="empty-state__subtitle">Create custom exercises for your specific training needs</p>
+          <button class="btn-add-exercise" disabled>
+            <span class="material-icons">add</span>
+            Create Custom Exercise
+          </button>
+        </div>
+      } @else {
+        <div class="exercise-grid">
+          @for (exercise of customExercises(); track exercise.id) {
+            <div class="exercise-card exercise-card--custom">
+              <div class="exercise-card__header">
+                <span class="exercise-card__name">{{ exercise.name }}</span>
+              </div>
+              @if (exercise.description) {
+                <p class="exercise-card__description">{{ exercise.description }}</p>
+              }
+              <span class="muscle-badge" [ngClass]="'muscle-' + exercise.muscleGroup.toLowerCase().replace('_', '-')">
+                {{ muscleGroupLabel(exercise.muscleGroup) }}
+              </span>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Global Exercises -->
+    <section class="exercise-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          Global Exercises
+          <span class="section-count">{{ globalExercises().length }}</span>
+          <span class="material-icons section-lock" title="Global exercises are managed by admins">lock</span>
+        </h2>
+      </div>
+
+      <div class="exercise-grid">
+        @for (exercise of globalExercises(); track exercise.id) {
+          <div class="exercise-card">
+            <div class="exercise-card__header">
+              <span class="exercise-card__name">{{ exercise.name }}</span>
+              <span class="material-icons exercise-card__lock">lock</span>
+            </div>
+            @if (exercise.description) {
+              <p class="exercise-card__description">{{ exercise.description }}</p>
+            }
+            <span class="muscle-badge" [ngClass]="'muscle-' + exercise.muscleGroup.toLowerCase().replace('_', '-')">
+              {{ muscleGroupLabel(exercise.muscleGroup) }}
+            </span>
+          </div>
+        }
+      </div>
+    </section>
+
+  }
+
+</div>

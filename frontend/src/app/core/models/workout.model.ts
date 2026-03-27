@@ -1,11 +1,12 @@
 export type WorkoutStatus = 'IN_PROGRESS' | 'COMPLETED';
-export type SetType = 'NORMAL' | 'WARMUP' | 'DROP_SET';
+export type SetType = 'WORKING' | 'WARMUP' | 'DROP';
 
 export interface WorkoutSet {
   id: number;
   exerciseId: number;
   exerciseName: string;
   setNumber: number;
+  blockIndex: number;   // which visual exercise block this set belongs to
   weight: number;
   reps: number;
   rpe?: number;
@@ -16,6 +17,7 @@ export interface WorkoutSet {
 export interface WorkoutSetRequest {
   exerciseId: number;
   setNumber: number;
+  blockIndex: number;   // assigned by the frontend, used to reconstruct groupings on reload
   weight: number;
   reps: number;
   rpe?: number;
